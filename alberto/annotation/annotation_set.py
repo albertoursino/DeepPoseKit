@@ -5,10 +5,9 @@ import matplotlib.pyplot as plt
 from deepposekit.io import VideoReader, DataGenerator, initialize_dataset
 import tqdm
 import glob
-import imageio
 
 HOME = 'C:/Users/Alberto Ursino/Desktop/IntellIj Local Files/DeepPoseKit/alberto'
-IMAGE_SIZE = (1024, 768)
+IMAGE_SIZE = (512, 512)
 IMG_CHANNEL = 3
 
 
@@ -41,7 +40,7 @@ def main():
     sampled_frames = []
     count = 0
     for image_file in tqdm.tqdm(glob.glob(
-            'C:/Users/Alberto Ursino/Desktop/IntellIj Local Files/DeepPoseKit/alberto/deepposekit-data/datasets/dog/dog_samples/*.png')):
+            'C:/Users/Alberto Ursino/Desktop/IntellIj Local Files/DeepPoseKit/alberto/deepposekit-data/datasets/dog/dog_samples/gray.png')):
         count += 1
         img = cv2.imread(image_file)
         resized_img = cv2.resize(img, IMAGE_SIZE)
@@ -61,10 +60,10 @@ def main():
     # print(var)
 
     initialize_dataset(images=sampled_frames,
-                       datapath=HOME + '/deepposekit-data/datasets/dog/example_annotation_set.h5',
+                       datapath=HOME + '/deepposekit-data/datasets/dog/annotation_set.h5',
                        skeleton=HOME + '/deepposekit-data/datasets/dog/skeleton.csv')
     data_generator = DataGenerator(
-        HOME + '/deepposekit-data/datasets/dog/example_annotation_set.h5',
+        HOME + '/deepposekit-data/datasets/dog/annotation_set.h5',
         mode="full")
 
     image, keypoints = data_generator[0]
