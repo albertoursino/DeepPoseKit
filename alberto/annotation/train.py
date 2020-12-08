@@ -1,4 +1,6 @@
 from alberto.annotation import annotation_set
+from pandas import np
+
 from deepposekit.io import TrainingGenerator, DataGenerator
 from deepposekit.augment import FlipAxis
 import imgaug.augmenters as iaa
@@ -6,6 +8,7 @@ import imgaug as ia
 
 from deepposekit.models import StackedHourglass
 from deepposekit.models import load_model
+import matplotlib.pyplot as plt
 
 from tensorflow.keras.callbacks import ReduceLROnPlateau, EarlyStopping
 
@@ -21,26 +24,26 @@ TYPE = annotation_set.TYPE
 data_generator = DataGenerator(
     datapath=HOME + '/deepposekit-data/datasets/{}/annotation_set_{}_{}.h5'.format(TYPE, IMAGE_SIZE[0], IMAGE_SIZE[1]))
 
-# image, keypoints = data_generator[0]
-#
-# plt.figure(figsize=(5, 5))
-# image = image[0] if image.shape[-1] is 3 else image[0, ..., 0]
-# cmap = None if image.shape[-1] is 3 else 'gray'
-# plt.imshow(image, cmap=cmap, interpolation='none')
-# for idx, jdx in enumerate(data_generator.graph):
-#     if jdx > -1:
-#         x1 = keypoints[0, idx, 0]
-#         x2 = keypoints[0, jdx, 0]
-#         if (0 <= x1 <= IMAGE_SIZE[0]) and (0 <= x2 <= IMAGE_SIZE[0]):
-#             plt.plot(
-#                 [keypoints[0, idx, 0], keypoints[0, jdx, 0]],
-#                 [keypoints[0, idx, 1], keypoints[0, jdx, 1]],
-#                 'r-'
-#             )
+image, keypoints = data_generator[0]
 
-# plt.scatter(keypoints[0, :, 0], keypoints[0, :, 1], c=np.arange(data_generator.keypoints_shape[0]), s=50, cmap=plt.cm.hsv, zorder=3)
+plt.figure(figsize=(5, 5))
+image = image[0] if image.shape[-1] is 3 else image[0, ..., 0]
+cmap = None if image.shape[-1] is 3 else 'gray'
+plt.imshow(image, cmap=cmap, interpolation='none')
+for idx, jdx in enumerate(data_generator.graph):
+    if jdx > -1:
+        x1 = keypoints[0, idx, 0]
+        x2 = keypoints[0, jdx, 0]
+        if (0 <= x1 <= IMAGE_SIZE[0]) and (0 <= x2 <= IMAGE_SIZE[0]):
+            plt.plot(
+                [keypoints[0, idx, 0], keypoints[0, jdx, 0]],
+                [keypoints[0, idx, 1], keypoints[0, jdx, 1]],
+                'r-'
+            )
 
-# plt.show()
+#plt.scatter(keypoints[0, :, 0], keypoints[0, :, 1], c=np.arange(data_generator.keypoints_shape[0]), s=50, cmap=plt.cm.hsv, zorder=3)
+
+plt.show()
 
 # Augmentation
 
@@ -87,7 +90,7 @@ augmenter = iaa.Sequential(augmenter)
 #                 'r-'
 #             )
 
-# plt.scatter(keypoints[0, :, 0], keypoints[0, :, 1], c=np.arange(data_generator.keypoints_shape[0]), s=50, cmap=plt.cm.hsv, zorder=3)
+plt.scatter(keypoints[0, :, 0], keypoints[0, :, 1], c=np.arange(data_generator.keypoints_shape[0]), s=50, cmap=plt.cm.hsv, zorder=3)
 
 # plt.show()
 
@@ -96,7 +99,7 @@ train_generator = TrainingGenerator(generator=data_generator,
                                     augmenter=augmenter,
                                     sigma=5,
                                     validation_split=0,
-                                    use_graph=True,
+                                    use_graph=False,
                                     random_seed=1,
                                     graph_scale=1)
 train_generator.get_config()
@@ -136,10 +139,10 @@ model.get_config()
 # t1 = time.time()
 # print(x.shape[0] / (t1 - t0))
 
-logger = Logger(validation_batch_size=10,
-                # filepath saves the logger data to a .h5 file
-                filepath=HOME + "/deepposekit-data/datasets/{}/log_densenet.h5".format(TYPE)
-                )
+# logger = Logger(validation_batch_size=10,
+#                 # filepath saves the logger data to a .h5 file
+#                 filepath=HOME + "/deepposekit-data/datasets/{}/log_densenet.h5".format(TYPE)
+#                 )
 
 # Remember, if you set validation_split=0 for your TrainingGenerator,
 # which will just use the training set for model fitting,
@@ -162,7 +165,7 @@ early_stop = EarlyStopping(
     verbose=1
 )
 
-callbacks = [early_stop, reduce_lr, model_checkpoint, logger]
+callbacks = [early_stop, reduce_lr, model_checkpoint]
 
 model.fit(
     batch_size=1,
@@ -175,11 +178,11 @@ model.fit(
 )
 
 # model = load_model(
-#     HOME + "/deepposekit-data/datasets/{}/log_densenet.h5".format(TYPE),
+#     HOME + "/deepposekit-data/datasets/{}/best_model_densenet.h5".format(TYPE),
 #     augmenter=augmenter,
 #     generator=data_generator,
 #     )
-#
+
 # model.fit(
 #     batch_size=5,
 #     validation_batch_size=10,

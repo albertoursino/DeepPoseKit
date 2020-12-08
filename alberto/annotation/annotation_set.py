@@ -35,7 +35,7 @@ def main():
     randomly_sampled_frames = []
     count = 0
     for image_file in tqdm.tqdm(glob.glob(
-            'C:/Users/Alberto Ursino/Desktop/IntellIj Local Files/DeepPoseKit/alberto/deepposekit-data/datasets/dog/DAVIS/Annotations/Full-Resolution/dog/*.png')):
+            'C:/Users/Alberto Ursino/Desktop/IntellIj Local Files/DeepPoseKit/alberto/deepposekit-data/datasets/dog/dog_samples/*.png')):
         count += 1
         img = cv2.imread(image_file)
         img = cv2.resize(img, IMAGE_SIZE)

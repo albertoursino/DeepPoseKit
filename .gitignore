@@ -66,3 +66,9 @@ tmp\.txt
 tmp2\.txt
 
 examples/deepposekit-data
+alberto/deepposekit-data/datasets/zebra
+alberto/deepposekit-data/datasets/locust
+alberto/deepposekit-data/datasets/human
+alberto/deepposekit-data/datasets/fly
+alberto/deepposekit-data/datasets/gray.png
+alberto/deepposekit-data/datasets/dog/dog_samples
