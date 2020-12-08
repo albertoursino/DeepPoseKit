@@ -37,13 +37,13 @@ class Logger(Callback):
     """
 
     def __init__(
-        self,
-        filepath=None,
-        validation_batch_size=1,
-        confidence_threshold=None,
-        verbose=1,
-        batch_size=None,
-        **kwargs
+            self,
+            filepath=None,
+            validation_batch_size=1,
+            confidence_threshold=None,
+            verbose=1,
+            batch_size=None,
+            **kwargs
     ):
 
         super(Logger, self).__init__(**kwargs)
@@ -113,7 +113,7 @@ class Logger(Callback):
         euclidean = evaluation_dict["euclidean"]
         confidence = evaluation_dict["confidence"]
         if self.filepath is not None:
-            with h5py.File(self.filepath) as h5file:
+            with h5py.File(self.filepath, mode='a') as h5file:
                 values = {
                     "val_loss": np.array([logs.get("val_loss")]).reshape(1),
                     "loss": np.array([logs.get("loss")]).reshape(1),
@@ -238,14 +238,14 @@ class ModelCheckpoint(callbacks.ModelCheckpoint):
     """
 
     def __init__(
-        self,
-        filepath,
-        monitor="val_loss",
-        verbose=0,
-        save_best_only=True,
-        mode="auto",
-        save_freq="epoch",
-        **kwargs
+            self,
+            filepath,
+            monitor="val_loss",
+            verbose=0,
+            save_best_only=True,
+            mode="auto",
+            save_freq="epoch",
+            **kwargs
     ):
         super(ModelCheckpoint, self).__init__(
             filepath=filepath,

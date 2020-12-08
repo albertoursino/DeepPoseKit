@@ -1,9 +1,4 @@
-import tensorflow as tf
-
-import numpy as np
-import matplotlib.pyplot as plt
-import glob
-
+from alberto.annotation import annotation_set
 from deepposekit.io import TrainingGenerator, DataGenerator
 from deepposekit.augment import FlipAxis
 import imgaug.augmenters as iaa
@@ -19,9 +14,12 @@ from deepposekit.callbacks import Logger, ModelCheckpoint
 import time
 from os.path import expanduser
 
-HOME = 'C:/Users/Alberto Ursino/Desktop/IntellIj Local Files/DeepPoseKit/alberto'
+HOME = annotation_set.HOME
+IMAGE_SIZE = annotation_set.IMAGE_SIZE
+TYPE = annotation_set.TYPE
 
-data_generator = DataGenerator(HOME + '/deepposekit-data/datasets/dog/annotation_set.h5')
+data_generator = DataGenerator(
+    datapath=HOME + '/deepposekit-data/datasets/{}/annotation_set_{}_{}.h5'.format(TYPE, IMAGE_SIZE[0], IMAGE_SIZE[1]))
 
 # image, keypoints = data_generator[0]
 #
@@ -31,14 +29,17 @@ data_generator = DataGenerator(HOME + '/deepposekit-data/datasets/dog/annotation
 # plt.imshow(image, cmap=cmap, interpolation='none')
 # for idx, jdx in enumerate(data_generator.graph):
 #     if jdx > -1:
-#         plt.plot(
-#             [keypoints[0, idx, 0], keypoints[0, jdx, 0]],
-#             [keypoints[0, idx, 1], keypoints[0, jdx, 1]],
-#             'r-'
-#         )
-# plt.scatter(keypoints[0, :, 0], keypoints[0, :, 1], c=np.arange(data_generator.keypoints_shape[0]), s=50,
-#             cmap=plt.cm.hsv, zorder=3)
-#
+#         x1 = keypoints[0, idx, 0]
+#         x2 = keypoints[0, jdx, 0]
+#         if (0 <= x1 <= IMAGE_SIZE[0]) and (0 <= x2 <= IMAGE_SIZE[0]):
+#             plt.plot(
+#                 [keypoints[0, idx, 0], keypoints[0, jdx, 0]],
+#                 [keypoints[0, idx, 1], keypoints[0, jdx, 1]],
+#                 'r-'
+#             )
+
+# plt.scatter(keypoints[0, :, 0], keypoints[0, :, 1], c=np.arange(data_generator.keypoints_shape[0]), s=50, cmap=plt.cm.hsv, zorder=3)
+
 # plt.show()
 
 # Augmentation
@@ -71,19 +72,23 @@ augmenter = iaa.Sequential(augmenter)
 
 # image, keypoints = data_generator[0]
 # image, keypoints = augmenter(images=image, keypoints=keypoints)
-# plt.figure(figsize=(5,5))
+# plt.figure(figsize=(5, 5))
 # image = image[0] if image.shape[-1] is 3 else image[0, ..., 0]
 # cmap = None if image.shape[-1] is 3 else 'gray'
 # plt.imshow(image, cmap=cmap, interpolation='none')
 # for idx, jdx in enumerate(data_generator.graph):
 #     if jdx > -1:
-#         plt.plot(
-#             [keypoints[0, idx, 0], keypoints[0, jdx, 0]],
-#             [keypoints[0, idx, 1], keypoints[0, jdx, 1]],
-#             'r-'
-#         )
+#         x1 = keypoints[0, idx, 0]
+#         x2 = keypoints[0, jdx, 0]
+#         if (0 <= x1 <= IMAGE_SIZE[0]) and (0 <= x2 <= IMAGE_SIZE[0]):
+#             plt.plot(
+#                 [keypoints[0, idx, 0], keypoints[0, jdx, 0]],
+#                 [keypoints[0, idx, 1], keypoints[0, jdx, 1]],
+#                 'r-'
+#             )
+
 # plt.scatter(keypoints[0, :, 0], keypoints[0, :, 1], c=np.arange(data_generator.keypoints_shape[0]), s=50, cmap=plt.cm.hsv, zorder=3)
-#
+
 # plt.show()
 
 train_generator = TrainingGenerator(generator=data_generator,
@@ -100,10 +105,10 @@ train_generator.get_config()
 # batch = train_generator(batch_size=1, validation=False)[0]
 # inputs = batch[0]
 # outputs = batch[1]
-#
+
 # fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(10, 10))
 # ax1.set_title('image')
-# ax1.imshow(inputs[0, ..., 0], cmap='gray', vmin=0, vmax=255)
+# ax1.imshow(inputs[0, ..., 0], vmin=0, vmax=255)
 #
 # ax2.set_title('posture graph')
 # ax2.imshow(outputs[0, ..., n_keypoints:-1].max(-1))
@@ -114,8 +119,8 @@ train_generator.get_config()
 # ax4.set_title('posture graph and keypoints confidence')
 # ax4.imshow(outputs[0, ..., -1], vmin=0)
 # plt.show()
-#
-# train_generator.on_epoch_end()
+
+train_generator.on_epoch_end()
 
 # Define a model
 
@@ -133,7 +138,7 @@ model.get_config()
 
 logger = Logger(validation_batch_size=10,
                 # filepath saves the logger data to a .h5 file
-                filepath=HOME + "/deepposekit-data/datasets/dog/log_densenet.h5"
+                filepath=HOME + "/deepposekit-data/datasets/{}/log_densenet.h5".format(TYPE)
                 )
 
 # Remember, if you set validation_split=0 for your TrainingGenerator,
@@ -142,15 +147,15 @@ logger = Logger(validation_batch_size=10,
 reduce_lr = ReduceLROnPlateau(monitor="loss", factor=0.2, verbose=1, patience=20)
 
 model_checkpoint = ModelCheckpoint(
-    HOME + "/deepposekit-data/datasets/fly/best_model_densenet.h5",
-    monitor="val_loss",
+    HOME + "/deepposekit-data/datasets/{}/best_model_densenet.h5".format(TYPE),
+    monitor="loss",
     # monitor="loss" # use if validation_split=0
     verbose=1,
     save_best_only=True,
 )
 
 early_stop = EarlyStopping(
-    monitor="val_loss",
+    monitor="loss",
     # monitor="loss" # use if validation_split=0
     min_delta=0.001,
     patience=100,
@@ -158,3 +163,28 @@ early_stop = EarlyStopping(
 )
 
 callbacks = [early_stop, reduce_lr, model_checkpoint, logger]
+
+model.fit(
+    batch_size=1,
+    validation_batch_size=10,
+    callbacks=callbacks,
+    # epochs=1000, # Increase the number of epochs to train the model longer
+    epochs=5,
+    n_workers=8,
+    steps_per_epoch=None,
+)
+
+# model = load_model(
+#     HOME + "/deepposekit-data/datasets/{}/log_densenet.h5".format(TYPE),
+#     augmenter=augmenter,
+#     generator=data_generator,
+#     )
+#
+# model.fit(
+#     batch_size=5,
+#     validation_batch_size=10,
+#     callbacks=callbacks,
+#     epochs=1,
+#     n_workers=8,
+#     steps_per_epoch=None,
+# )
