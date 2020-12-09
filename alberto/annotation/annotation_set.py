@@ -11,7 +11,6 @@ HOME = 'C:/Users/Alberto Ursino/Desktop/IntellIj Local Files/DeepPoseKit/alberto
 IMAGE_SIZE = (512, 256)
 TYPE = 'dog'
 
-
 # This class loads and samples images from a video, defines a keypoint skeleton, and saves the data to a file for labelling with keypoints.
 
 def main():
@@ -32,21 +31,22 @@ def main():
     #
     # randomly_sampled_frames = np.concatenate(randomly_sampled_frames)
 
-    randomly_sampled_frames = []
+    sampled_frames = []
     count = 0
-    for image_file in tqdm.tqdm(glob.glob(
-            'C:/Users/Alberto Ursino/Desktop/IntellIj Local Files/DeepPoseKit/alberto/deepposekit-data/datasets/dog/dog_samples/*.png')):
+    for image_file in tqdm.tqdm(glob.glob(HOME+'/deepposekit-data/datasets/dog/images/dog_samples/*.png')):
         count += 1
         img = cv2.imread(image_file)
         img = cv2.resize(img, IMAGE_SIZE)
         # img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        randomly_sampled_frames.append(img)
-    img_channel = randomly_sampled_frames[0].shape[2]
+        sampled_frames.append(img)
+    img_channel = sampled_frames[0].shape[2]
 
-    randomly_sampled_frames = np.concatenate(randomly_sampled_frames)
-    randomly_sampled_frames = np.reshape(randomly_sampled_frames, (count, IMAGE_SIZE[1], IMAGE_SIZE[0], img_channel))
-    var = randomly_sampled_frames.shape
+    sampled_frames = np.concatenate(sampled_frames)
+    sampled_frames = np.reshape(sampled_frames, (count, IMAGE_SIZE[1], IMAGE_SIZE[0], img_channel))
+    var = sampled_frames.shape
     print(var)
+
+
 
     # kmeans = KMeansSampler(n_clusters=10, max_iter=1000, n_init=10, batch_size=100, verbose=True)
     # kmeans.fit(randomly_sampled_frames)
@@ -56,7 +56,7 @@ def main():
     # var = kmeans_sampled_frames.shape
     # print(var)
 
-    initialize_dataset(images=randomly_sampled_frames,
+    initialize_dataset(images=sampled_frames,
                        datapath=HOME + '/deepposekit-data/datasets/{}/annotation_set_{}_{}.h5'.format(TYPE,
                                                                                                       IMAGE_SIZE[0],
                                                                                                       IMAGE_SIZE[1]),

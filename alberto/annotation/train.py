@@ -41,7 +41,7 @@ for idx, jdx in enumerate(data_generator.graph):
                 'r-'
             )
 
-#plt.scatter(keypoints[0, :, 0], keypoints[0, :, 1], c=np.arange(data_generator.keypoints_shape[0]), s=50, cmap=plt.cm.hsv, zorder=3)
+# plt.scatter(keypoints[0, :, 0], keypoints[0, :, 1], c=np.arange(data_generator.keypoints_shape[0]), s=50, cmap=plt.cm.hsv, zorder=3)
 
 plt.show()
 
@@ -90,7 +90,8 @@ augmenter = iaa.Sequential(augmenter)
 #                 'r-'
 #             )
 
-plt.scatter(keypoints[0, :, 0], keypoints[0, :, 1], c=np.arange(data_generator.keypoints_shape[0]), s=50, cmap=plt.cm.hsv, zorder=3)
+plt.scatter(keypoints[0, :, 0], keypoints[0, :, 1], c=np.arange(data_generator.keypoints_shape[0]), s=50,
+            cmap=plt.cm.hsv, zorder=3)
 
 # plt.show()
 
@@ -182,9 +183,9 @@ model.fit(
 #     augmenter=augmenter,
 #     generator=data_generator,
 #     )
-
+#
 # model.fit(
-#     batch_size=5,
+#     batch_size=1,
 #     validation_batch_size=10,
 #     callbacks=callbacks,
 #     epochs=1,
