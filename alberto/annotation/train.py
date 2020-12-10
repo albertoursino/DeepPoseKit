@@ -41,7 +41,7 @@ for idx, jdx in enumerate(data_generator.graph):
                 'r-'
             )
 
-# plt.scatter(keypoints[0, :, 0], keypoints[0, :, 1], c=np.arange(data_generator.keypoints_shape[0]), s=50, cmap=plt.cm.hsv, zorder=3)
+plt.scatter(keypoints[0, :, 0], keypoints[0, :, 1], c=np.arange(data_generator.keypoints_shape[0]), s=50, cmap=plt.cm.hsv, zorder=3)
 
 plt.show()
 
@@ -173,7 +173,7 @@ model.fit(
     validation_batch_size=10,
     callbacks=callbacks,
     # epochs=1000, # Increase the number of epochs to train the model longer
-    epochs=20,
+    epochs=50,
     n_workers=8,
     steps_per_epoch=None,
 )

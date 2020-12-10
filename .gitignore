@@ -73,3 +73,4 @@ alberto/deepposekit-data/datasets/fly
 alberto/deepposekit-data/datasets/dog/images/dog_samples
 alberto/deepposekit-data/datasets/dog/images/dog_agility
 alberto/deepposekit-data/datasets/dog/images/rs_dog
+alberto/deepposekit-data/datasets/dog/manually_annotation_set_512_256.h5

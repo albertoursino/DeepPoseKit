@@ -6,7 +6,6 @@ upper_left_0,upper_left_1,upper_right_0
 upper_left_1,upper_left_2,upper_right_1
 upper_left_2,,upper_right_2
 neck_lower,,
-neck_upper,neck_lower,
 lower_right_0,lower_right_1,lower_left_0
 lower_right_1,lower_right_2,lower_left_1
 lower_right_2,,lower_left_2
@@ -16,7 +15,7 @@ lower_left_2,,lower_right_2
 tail_0,tail_1,
 tail_1,tail_2,
 tail_2,,
-nose,neck_upper,
-chin,neck_upper,
-right_ear,neck_upper,left_ear
-left_ear,neck_upper,right_ear
+jaw,neck_lower,
+nose,neck_lower,
+right_ear,neck_lower,left_ear
+left_ear,neck_lower,right_ear
