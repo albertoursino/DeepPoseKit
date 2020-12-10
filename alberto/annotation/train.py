@@ -169,11 +169,11 @@ early_stop = EarlyStopping(
 callbacks = [early_stop, reduce_lr, model_checkpoint]
 
 model.fit(
-    batch_size=1,
+    batch_size=5,
     validation_batch_size=10,
     callbacks=callbacks,
     # epochs=1000, # Increase the number of epochs to train the model longer
-    epochs=5,
+    epochs=20,
     n_workers=8,
     steps_per_epoch=None,
 )
@@ -185,10 +185,10 @@ model.fit(
 #     )
 #
 # model.fit(
-#     batch_size=1,
+#     batch_size=2,
 #     validation_batch_size=10,
 #     callbacks=callbacks,
-#     epochs=1,
+#     epochs=50,
 #     n_workers=8,
 #     steps_per_epoch=None,
 # )

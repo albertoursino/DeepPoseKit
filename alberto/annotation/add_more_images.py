@@ -23,7 +23,7 @@ num_image = hf['images'].shape[0]
 # Sampling new images
 sampled_frames = list(images_dataset)
 count = 0
-for image_file in tqdm.tqdm(glob.glob(HOME + '/deepposekit-data/datasets/dog/images/dog_agility/*.png')):
+for image_file in tqdm.tqdm(glob.glob('/alberto/deepposekit-data/datasets/dog/images/rs_dog/*.png')):
     img = cv2.imread(image_file)
     img = cv2.resize(img, IMAGE_SIZE)
     # img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -36,13 +36,10 @@ sampled_frames = np.reshape(sampled_frames, (num_image+count, IMAGE_SIZE[1], IMA
 
 # Reshaping in order to add new images
 
-hf['images'].resize((num_image + count, images_dataset.shape[1], images_dataset.shape[2], images_dataset.shape[3]))
+del hf['images']
+hf.create_dataset('images', data=sampled_frames, maxshape=(None, None, None, None))
 hf['annotated'].resize((num_image + count, annotated_dataset.shape[1]))
 hf['annotations'].resize((num_image + count, anns_dataset.shape[1], anns_dataset.shape[2]))
 
-# Updating datasets
-
-del hf['images']
-hf.create_dataset('images', data=sampled_frames)
 
 print()
