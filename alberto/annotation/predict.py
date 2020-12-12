@@ -43,15 +43,13 @@ data_generator = DataGenerator(
 image, k = data_generator[0]
 keypoints = predictions[0]
 
-idx = 80
-
-for i in range(idx, len(data_generator)):
+for i in range(len(data_generator)):
     image, k = data_generator[i]
     keypoints = predictions[i]
     plt.figure(figsize=(5, 5))
     image = image[0] if image.shape[-1] is 3 else image[..., 0]
     cmap = None if image.shape[-1] is 3 else 'gray'
-    plt.imshow(image, cmap=cmap, interpolation='none')
+    plt.imshow(image[0], cmap=cmap, interpolation='none')
     for idx, jdx in enumerate(data_generator.graph):
         if jdx > -1:
             plt.plot(
@@ -63,5 +61,5 @@ for i in range(idx, len(data_generator)):
                 c=np.arange(data_generator.keypoints_shape[0]),
                 s=50, cmap=plt.cm.hsv, zorder=3)
 
-    plt.show()
+    plt.savefig(HOME + '/predict-images/image_{}'.format(i))
 
