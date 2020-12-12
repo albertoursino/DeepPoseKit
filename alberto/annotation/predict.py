@@ -20,8 +20,8 @@ HOME = annotation_set.HOME
 IMAGE_SIZE = (512, 256)
 TYPE = annotation_set.TYPE
 
-# models = sorted(glob.glob(HOME + '/deepposekit-data/datasets/{}/best_model_densenet.h5'.format(TYPE)))
-# model = load_model(HOME + '/deepposekit-data/datasets/{}/best_model_densenet.h5'.format(TYPE))
+# models = sorted(glob.glob(HOME + '/deepposekit-data/datasets/{}/model_densenet.h5'.format(TYPE)))
+# model = load_model(HOME + '/deepposekit-data/datasets/{}/model_densenet.h5'.format(TYPE))
 #
 # hf = h5py.File(HOME +
 #                '/deepposekit-data/datasets/{}/annotation_set_{}_{}.h5'.format(TYPE, IMAGE_SIZE[0],
@@ -39,9 +39,6 @@ predictions = np.load(HOME + '/deepposekit-data/datasets/{}/predictions.npy'.for
 
 data_generator = DataGenerator(
     HOME + '/deepposekit-data/datasets/{}/annotation_set_{}_{}.h5'.format(TYPE, IMAGE_SIZE[0], IMAGE_SIZE[1]))
-
-image, k = data_generator[0]
-keypoints = predictions[0]
 
 for i in range(len(data_generator)):
     image, k = data_generator[i]
@@ -61,5 +58,5 @@ for i in range(len(data_generator)):
                 c=np.arange(data_generator.keypoints_shape[0]),
                 s=50, cmap=plt.cm.hsv, zorder=3)
 
-    plt.savefig(HOME + '/predict-images/image_{}'.format(i))
+    plt.savefig(HOME + '/predicted-images/image_{}'.format(i))
 

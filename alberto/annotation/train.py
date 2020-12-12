@@ -151,7 +151,7 @@ model.get_config()
 reduce_lr = ReduceLROnPlateau(monitor="loss", factor=0.2, verbose=1, patience=20)
 
 model_checkpoint = ModelCheckpoint(
-    HOME + "/deepposekit-data/datasets/{}/best_model_densenet.h5".format(TYPE),
+    HOME + "/deepposekit-data/datasets/{}/model_densenet.h5".format(TYPE),
     monitor="loss",
     # monitor="loss" # use if validation_split=0
     verbose=1,
@@ -179,7 +179,7 @@ model.fit(
 )
 
 # model = load_model(
-#     HOME + "/deepposekit-data/datasets/{}/best_model_densenet.h5".format(TYPE),
+#     HOME + "/deepposekit-data/datasets/{}/model_densenet.h5".format(TYPE),
 #     augmenter=augmenter,
 #     generator=data_generator,
 #     )
